@@ -462,7 +462,7 @@ class Cursor {
         const gt = makeIndexKeyFromQuery(query, prefixFields)
 
         const opts = {
-          reverse: (sort?.direction === -1)
+          reverse: (sort && sort.direction === -1)
         }
         if (gt && gt.length) {
           opts.gt = gt
@@ -592,7 +592,7 @@ function compareEq (docValue, queryValue) {
   if (Array.isArray(docValue)) {
     return docValue
       .some((item) => compareEq(item, queryValue))
-  } else if (typeof docValue?.equals === 'function') {
+  } else if (docValue && typeof docValue.equals === 'function') {
     return docValue.equals(queryValue)
   } else {
     return queryValue === docValue
