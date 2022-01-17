@@ -65,9 +65,9 @@ class Collection {
   constructor (name, bee) {
     this.name = name
     this.bee = bee
-    this.docs = bee.sub('doc')
-    this.idxs = bee.sub('idxs')
-    this.idx = bee.sub('idx')
+    this.docs = bee.sub(`${name}-doc`)
+    this.idxs = bee.sub(`${name}-idxs`)
+    this.idx = bee.sub(`${name}-idx`)
   }
 
   async insert (rawDoc) {
