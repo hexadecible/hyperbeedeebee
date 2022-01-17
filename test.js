@@ -878,6 +878,32 @@ test('.update with array of updates', async (t) => {
   }
 })
 
+test('delete documents', async (t) => {
+  const db = new DB(getBee())
+
+  try {
+    const collection = db.collection('example')
+
+    await collection.insert({ value: 0 })
+    await collection.insert({ value: 1 })
+    await collection.insert({ value: 2 })
+    await collection.insert({ value: 3 })
+    await collection.insert({ value: 4 })
+
+    await collection.delete({ value: 0 })
+
+    let docs = await collection.find()
+    t.equal(docs.length, 4, 'Single document was removed')
+
+    await collection.delete({}, { multi: true })
+
+    docs = await collection.find()
+    t.equal(docs.length, 0, 'Multiple documents were removed')
+  } finally {
+    await db.close()
+  }
+})
+
 /* Test template
 
 test('', async (t) => {

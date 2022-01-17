@@ -161,6 +161,35 @@ class Collection {
     }
   }
 
+  async delete (query = {}, options = {}) {
+    const {
+      multi = false,
+      hint = null
+    } = options
+
+    let cursor = this.find(query)
+    if (hint) cursor = cursor.hint(hint)
+    if (!multi) cursor = cursor.limit(1)
+
+    const indexes = await this.listIndexes()
+    const batch = await this.docs.batch()
+
+    for await (const doc of cursor) {
+      const key = doc._id.id
+
+      await batch.del(key)
+
+      for (const { fields, name } of indexes) {
+        // TODO: Cache index subs
+        const bee = this.idx.sub(name)
+
+        await this._deIndexDocument(bee, fields, doc)
+      }
+    }
+
+    await batch.flush()
+  }
+
   async findOne (query = {}) {
     const results = await (this.find(query).limit(1))
 
