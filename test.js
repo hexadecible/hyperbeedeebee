@@ -884,6 +884,8 @@ test('delete documents', async (t) => {
   try {
     const collection = db.collection('example')
 
+    await collection.createIndex(['value'])
+
     await collection.insert({ value: 0 })
     await collection.insert({ value: 1 })
     await collection.insert({ value: 2 })
