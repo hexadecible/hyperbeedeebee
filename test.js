@@ -892,15 +892,10 @@ test('delete documents', async (t) => {
     await collection.insert({ value: 3 })
     await collection.insert({ value: 4 })
 
-    await collection.delete({ value: 0 })
+    await collection.remove({ value: 0 })
 
-    let docs = await collection.find()
+    const docs = await collection.find()
     t.equal(docs.length, 4, 'Single document was removed')
-
-    await collection.delete({}, { multi: true })
-
-    docs = await collection.find()
-    t.equal(docs.length, 0, 'Multiple documents were removed')
   } finally {
     await db.close()
   }

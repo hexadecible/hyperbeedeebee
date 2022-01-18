@@ -237,6 +237,10 @@ const {nUpserted} = await collection.update({
 })
 ```
 
+### `await collection.remove(query)`
+
+Removes a document and cleans up any indexed values the document may have.
+
 ### `query[field] query[field].$eq`
 
 Find fields that are equal to a specific value.
@@ -508,7 +512,7 @@ await collection.update({
 - [x] Indexed find for `$in`
 - [x] Indexed find for `$all`
 - [x] Hint API (specify index to use)
-- [ ] Delete documents (clean up indexed values for them)
+- [x] Delete documents (clean up indexed values for them)
 - [ ] Test if iterators clean up properly
 - [ ] More efficient support for `$gt`/`$gte`/`$lt`/`$lte` indexes
 - [ ] More efficient support for `$all` indexes

@@ -161,7 +161,7 @@ class Collection {
     }
   }
 
-  async delete (query = {}, options = {}) {
+  async remove (query = {}, options = {}) {
     const {
       multi = false,
       hint = null
@@ -171,13 +171,18 @@ class Collection {
     if (hint) cursor = cursor.hint(hint)
     if (!multi) cursor = cursor.limit(1)
 
-    const batch = await this.docs.batch()
+    const indexes = await this.listIndexes()
 
     for await (const doc of cursor) {
       const key = doc._id.id
-      await batch.del(key)
+
+      for (const { fields, name } of indexes) {
+        const bee = this.idx.sub(name)
+        await this._deIndexDocument(bee, fields, doc)
+      }
+
+      await this.docs.del(key)
     }
-    await batch.flush()
   }
 
   async findOne (query = {}) {
