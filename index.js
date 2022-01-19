@@ -228,7 +228,6 @@ class Collection {
 
   async getIndex (name) {
     const data = await this.idxs.get(name)
-
     if (!data) throw new Error('Invalid index')
     return BSON.deserialize(data.value)
   }
@@ -333,13 +332,12 @@ class Cursor {
   async getIndex () {
     const { sort, hint } = this.opts
     const query = this.query
-    const queryFields = Object.keys(query)
 
+    const queryFields = Object.keys(query)
     // Filter out fields with `$exists: false` since we can't index non-existance
     const existingFields = queryFields.filter((field) => {
       return isQueryObject(query[field]) ? query[field].$exists !== false : true
     })
-
     const eqS = existingFields.filter((name) => {
       const queryValue = query[name]
       if (!isQueryObject(queryValue)) return true
@@ -366,14 +364,12 @@ class Cursor {
     }
 
     const allIndexes = await this.collection.listIndexes()
-
     const matchingIndexes = allIndexes
       .filter(({ fields }) => {
         if (sort) {
           // At the very least we _need_ to have the sort field
           const sortIndex = fields.indexOf(sort.field)
           if (sortIndex === -1) return false
-
           // All the fields before the sort should be $eq fields
           const consecutive = consecutiveSubset(fields, eqS)
           return consecutive === sortIndex
@@ -837,7 +833,8 @@ function has$Keys (object) {
 function consecutiveSubset (origin, values) {
   let counter = 0
   for (const item of origin) {
-    if (values.includes(item)) counter++
+    if (!values.includes(item)) return counter
+    counter++
   }
   return counter
 }
