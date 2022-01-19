@@ -270,7 +270,7 @@ test('Create indexes and list them', async (t) => {
 test('Sort by index', async (t) => {
   const db = new DB(getBee())
   try {
-    await db.collection('example').createIndex(['example', 'createdAt'])
+    await db.collection('example').createIndex(['createdAt', 'example'])
 
     await db.collection('example').insert({ example: 1, createdAt: new Date() })
     await db.collection('example').insert({ example: 2, createdAt: new Date() })

@@ -374,13 +374,8 @@ class Cursor {
           const sortIndex = fields.indexOf(sort.field)
           if (sortIndex === -1) return false
 
-          let _eqS = eqS
-
-          if (eqS.length === 0 && fields.length > 1) _eqS = [sort.field]
-
           // All the fields before the sort should be $eq fields
-          const consecutive = consecutiveSubset(fields, _eqS)
-
+          const consecutive = consecutiveSubset(fields, eqS)
           return consecutive === sortIndex
         } else {
           // Ensure the fields have _some_ of the query fields
