@@ -247,14 +247,10 @@ class Collection {
     if (!hasFields(doc, fields)) return
     const idxValue = doc._id.id
 
-    const batch = bee.batch()
-
     for (const flattened of flattenDocument(doc, fields)) {
       const idxKey = makeIndexKey(flattened, fields)
-      await batch.put(idxKey, idxValue)
+      await bee.put(idxKey, idxValue)
     }
-
-    await batch.flush()
   }
 
   async _deIndexDocument (bee, fields, doc) {
