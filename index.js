@@ -260,14 +260,10 @@ class Collection {
   async _deIndexDocument (bee, fields, doc) {
     if (!hasFields(doc, fields)) return
 
-    const batch = bee.batch()
-
     for (const flattened of flattenDocument(doc, fields)) {
       const idxKey = makeIndexKey(flattened, fields)
-      await batch.del(idxKey)
+      await bee.del(idxKey)
     }
-
-    await batch.flush()
   }
 
   // TODO: Cache indexes?
